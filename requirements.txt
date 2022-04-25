@@ -1,0 +1,4 @@
+click==8.1.2
+pycodestyle==2.8.0
+PyGitHub==1.55
+requests==2.27.1
