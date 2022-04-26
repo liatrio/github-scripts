@@ -1,0 +1,23 @@
+{
+  "name": "github-discovery",
+  "version": "1.0.0",
+  "description": "This is a collection of scripts for exploring GitHub teams, organizations, and enterprises",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liatrio/github-discovery.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/liatrio/github-discovery/issues"
+  },
+  "homepage": "https://github.com/liatrio/github-discovery#readme",
+  "dependencies": {
+    "@octokit/rest": "^18.12.0"
+  }
+}
