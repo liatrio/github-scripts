@@ -4,25 +4,19 @@ This is a collection of scripts for exploring GitHub teams, organizations, and e
 
 ## Setup
 
-* Install Python 3.x (Python 3.10 is the latest)
-  * [Python Download](https://www.python.org/downloads/)
-* Install PIP
-  * [PIP Install Commands](https://pip.pypa.io/en/stable/installation/)
-* Install PIP requirements 
-  * ```pip3 install -r {path_to_file}/requirements.txt```
+* Install NodeJS (NodeJS 16.15.0 is latest stable)
+  * [NodeJS Download](https://nodejs.org/en/)
 * Create GitHub PAT
   * [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+  * Set PAT as environment variable -  ```export GITHUB_TOKEN={PAT}``` (Mac/Linux)
 
 ## Running the Discovery Scripts
 
-The program must be invoked as follows (substitue python with python3 if you used HomeBrew or a similar tool to install python without setting the python alias)
+1. Run ```npm install``` to install dependencies
+2. Navigate to the readme for the GitHub group you gather discovery metrics on
 
-```
-python {path_to_file}/{file}.py
-```
-
-Optional ([click](https://click.palletsprojects.com/en/7.x/) will prompt you for inputs if not provided)
-
-```
-python {path_to_file}/{file}.py {--click_argument=arg_input}
-```
+|              | readme link  |
+| ------------ | ------------ |
+| Team         | N/A          |
+| Organization | [ Org Docs](./org-disco/README.md) |
+| Enterprise   | N/A          |
