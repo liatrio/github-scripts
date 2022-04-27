@@ -1,8 +1,8 @@
 const { Octokit } = require("@octokit/rest");
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
-const ORGANIZATION_LIST = ['liatrio']
-const PERCENTAGE_OF_CODE_THRESHOLD = 10;
+const ORGANIZATION_LIST = ['mitchell-liatrio']
+const PERCENTAGE_OF_CODE_THRESHOLD = 75;
 
 
 (async () => {
