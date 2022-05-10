@@ -31,6 +31,8 @@ module.exports = {
 
             for (const collaborator of collaborators) {
                 if (collaborator.role_name === oldRole) {
+                    console.log(`Updating collaborator ${collaborator.login} in repository ${argv.organization}/${repository.name} from ${oldRole} to ${newRole}`);
+
                     await octokit.rest.repos.addCollaborator({
                         owner: argv.organization,
                         repo: repository.name,
