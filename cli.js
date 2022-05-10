@@ -32,6 +32,7 @@ const path = require("node:path");
     argv = argv
         .wrap(null)
         .help()
+        .demandCommand()
         .strict()
         .argv
 
