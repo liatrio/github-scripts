@@ -45,3 +45,17 @@ Example:
 ```bash
 $ node cli.js reassign-repository-roles -o OneGHEOrg --old-role "write" --new-role "maintain"
 ```
+
+### Enable GitHub Advanced Security Features (Secret Scanning / Push Protection)
+
+Given a GitHub Organization and (optionally) a list of repositories, enable GitHub Advanced Security features within each repository.
+
+```bash
+$ node cli.js enable-secret-scanning --help
+```
+
+Example:
+
+```bash
+$ node cli.js enable-secret-scanning -o OneGHEOrg -r github-azure-demo -p true
+```
