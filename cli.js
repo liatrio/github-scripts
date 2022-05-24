@@ -38,5 +38,7 @@ const path = require("node:path");
 
     const octokit = new Octokit({ auth: argv.token });
 
+    console.log()
+
     await actions[argv._[0]](octokit, argv);
 })();

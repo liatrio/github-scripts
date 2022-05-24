@@ -1,8 +1,8 @@
-const kleur = require("kleur");
-const prompts = require("prompts");
+const { bold } = require("kleur");
+const parseDuration = require("parse-duration");
 
-const { warn, success } = require("../util/log")
-const { listAllRepositoriesInOrganization } = require("../util/github");
+const { warn, success, info, list, confirm } = require("../util/log")
+const { listAllRepositoriesInOrganization, listAllRepositoriesInOrganizationUpdatedAfterDate } = require("../util/github");
 
 module.exports = {
     description: "enable secret scanning / push protection for GitHub repositories within an organization",
@@ -18,6 +18,12 @@ module.exports = {
             describe: "only enable secret scanning / push protection on the specified repositories. this flag can be set multiple times",
             type: "array",
         },
+        duration: {
+            alias: "d",
+            describe: "when specified, enable secret scanning / push protection for all repositories that have activity within the specified duration. (ex: 1w = one week)",
+            type: "string",
+            conflicts: "repository"
+        },
         "enable-push-protection": {
             alias: "p",
             default: false,
@@ -29,17 +35,40 @@ module.exports = {
         const enablePushProtection = argv["enable-push-protection"];
         let repositories;
 
-        if (!argv.repository) {
-            warn(kleur.bold(`Warning: Enabling secret scanning / push protection for all repositories in the ${argv.organization} organization could consume many license seats.`));
-            console.log("   You can enable secret scanning / push protection on select repositories by using the -r flag.\n")
+        if (argv.duration) {
+            const duration = parseDuration(argv.duration);
 
-            const { confirm } = await prompts({
-                type: "confirm",
-                message: ` Are you sure you wish to continue?`,
-                name: "confirm",
-            });
+            if (!duration) {
+                warn("Unable to parse given duration string");
+                return;
+            }
 
-            if (!confirm) {
+            const now = new Date();
+            const then = new Date(Date.now() - duration);
+
+            repositories = (await listAllRepositoriesInOrganizationUpdatedAfterDate(octokit, argv.organization, then)).map((repository) => repository.name);
+
+            if (repositories.length === 0) {
+                warn("Unable to find any repositories that have been updated within the specified duration.")
+                return;
+            }
+
+            info(`You'd like to enable secret scanning / push protection for all repositories that have been updated between today (${now.toLocaleDateString()}) and ${then.toLocaleDateString()}:`)
+            list(repositories);
+            console.log();
+
+            const ok = await confirm();
+
+            if (!ok) {
+                return;
+            }
+        } else if (!argv.repository) {
+            warn(bold(`Warning: Enabling secret scanning / push protection for all repositories in the ${argv.organization} organization could consume many license seats.`));
+            console.log("   You can enable secret scanning / push protection on select repositories by using the -r flag, or specify a last pushed duration with the -d flag.\n")
+
+            const ok = await confirm();
+
+            if (!ok) {
                 return;
             }
 
