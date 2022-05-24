@@ -54,8 +54,14 @@ Given a GitHub Organization and (optionally) a list of repositories, enable GitH
 $ node cli.js enable-secret-scanning --help
 ```
 
-Example:
+Example - enable secret scanning and push protection only on the `OneGHEOrg/github-azure-demo` repository:
 
 ```bash
 $ node cli.js enable-secret-scanning -o OneGHEOrg -r github-azure-demo -p true
+```
+
+Example - enable secret scanning on all repositories within the `OneGHEOrg` organization that have been updated within the last month:
+
+```bash
+$ node cli.js enable-secret-scanning -o OneGHEOrg -d "1 month"
 ```
