@@ -27,7 +27,6 @@ module.exports = {
         const teams = await listAllTeamsInOrganization(octokit, argv.organization);
 
         for (const team of teams) {
-            console.log(team.slug)
             const repositories = await listAllReposForTeam(octokit, argv.organization, team.slug)
 
             for (const repo of repositories) {
