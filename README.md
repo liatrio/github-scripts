@@ -46,6 +46,19 @@ Example:
 $ node cli.js reassign-repository-roles -o OneGHEOrg --old-role "write" --new-role "maintain"
 ```
 
+### Reassign Team Roles 
+Given a GitHub Organization, find each team with a specific role in any repository, and update this role to a new one.
+
+```bash
+$ node cli.js reassign-team-roles --help
+```
+
+Example:
+
+```bash
+$ node cli.js reassign-team-roles -o OneGHEOrg --old-role "write" --new-role "maintain"
+```
+
 ### Enable GitHub Advanced Security Features (Secret Scanning / Push Protection)
 
 Given a GitHub Organization and (optionally) a list of repositories, enable GitHub Advanced Security features within each repository.
