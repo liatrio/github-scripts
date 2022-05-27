@@ -33,8 +33,21 @@ const listAllCollaboratorsInRepository = (octokit, organization, repository) =>
         affiliation: "direct",
     });
 
+const listAllTeamsInOrganization = (octokit, organization) =>
+    octokit.paginate(octokit.rest.teams.list, {
+        org: organization
+    });
+
+const listAllReposForTeam = (octokit, organization, team_slug) =>
+    octokit.paginate(octokit.rest.teams.listReposInOrg, {
+        org: organization,
+        team_slug: team_slug
+    })
+
 module.exports = {
     listAllRepositoriesInOrganization,
     listAllRepositoriesInOrganizationUpdatedAfterDate,
-    listAllCollaboratorsInRepository
+    listAllCollaboratorsInRepository,
+    listAllTeamsInOrganization,
+    listAllReposForTeam
 };
