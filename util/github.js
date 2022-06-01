@@ -42,12 +42,18 @@ const listAllReposForTeam = (octokit, organization, team_slug) =>
     octokit.paginate(octokit.rest.teams.listReposInOrg, {
         org: organization,
         team_slug: team_slug
-    })
+    });
+
+const searchByCriteria = (octokit, searchString) =>
+    octokit.paginate(octokit.rest.search.code, {
+        q: searchString
+    });
 
 module.exports = {
     listAllRepositoriesInOrganization,
     listAllRepositoriesInOrganizationUpdatedAfterDate,
     listAllCollaboratorsInRepository,
     listAllTeamsInOrganization,
-    listAllReposForTeam
+    listAllReposForTeam,
+    searchByCriteria
 };
