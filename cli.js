@@ -14,9 +14,7 @@ const path = require("node:path");
             describe: "GitHub personal access token to use when making API calls",
             demandOption: true,
         })
-        .default("t", () => {
-            return process.env.GITHUB_TOKEN;
-        }, "GITHUB_TOKEN environment variable");
+        .default("t", () => process.env.GITHUB_TOKEN, "GITHUB_TOKEN environment variable");
 
     const actions = {};
 
@@ -30,15 +28,15 @@ const path = require("node:path");
     }
 
     argv = argv
-        .wrap(null)
+        .wrap(null) // eslint-disable-line unicorn/no-null
         .help()
         .demandCommand()
         .strict()
-        .argv
+        .argv;
 
     const octokit = new Octokit({ auth: argv.token });
 
-    console.log()
+    console.log();
 
     await actions[argv._[0]](octokit, argv);
 })();

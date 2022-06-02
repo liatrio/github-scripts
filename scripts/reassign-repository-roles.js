@@ -3,22 +3,22 @@ const { listAllRepositoriesInOrganization, listAllCollaboratorsInRepository } = 
 module.exports = {
     description: "globally reassign permissions in all repositories within an organization",
     options: {
-        organization: {
+        "organization": {
             alias: "o",
             demandOption: true,
             describe: "the GitHub organization containing the repositories to reassign roles",
-            type: "string"
+            type: "string",
         },
         "old-role": {
             demandOption: true,
             describe: "old role",
-            type: "string"
+            type: "string",
         },
         "new-role": {
             demandOption: true,
             describe: "new role",
-            type: "string"
-        }
+            type: "string",
+        },
     },
     action: async (octokit, argv) => {
         const oldRole = argv["old-role"];
@@ -37,10 +37,10 @@ module.exports = {
                         owner: argv.organization,
                         repo: repository.name,
                         username: collaborator.login,
-                        permission: newRole
+                        permission: newRole,
                     });
                 }
             }
         }
-    }
+    },
 };
