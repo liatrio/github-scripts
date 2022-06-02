@@ -25,7 +25,7 @@ module.exports = {
     action: async (octokit, argv) => {
         const reposMatchingExtensions = {};
 
-        const formattedExtensionsString = concat("+extension:", argv.extensions.join("+extension:"));
+        const formattedExtensionsString = "+extension:"+argv.extensions.join("+extension:");
 
         const queryResults = await searchByCriteria(octokit, `*+org:${argv.organization}${formattedExtensionsString}`);
 

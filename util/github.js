@@ -59,7 +59,7 @@ const listFileCountInRepository = async (octokit, organization, repository) => {
 
     const repoFiles = repoTree.data.tree.filter((file) => file.type !== "tree");
 
-    return repoFiles.length
+    return repoFiles.length;
 };
 
 const searchByCriteria = (octokit, searchString) =>
