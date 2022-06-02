@@ -1,4 +1,4 @@
-const { searchByCriteria } = require("../util/github");
+const { listFileCountInRepository, searchByCriteria } = require("../util/github");
 
 module.exports = {
     description: "list repos matching organization and extensions",
@@ -18,7 +18,7 @@ module.exports = {
         count: {
             alias: "c",
             default: false,
-            describe: "boolean flag to enable total count of files, will drastically reduce execution time",
+            describe: "boolean flag to enable total count of files, will drastically increase execution time",
             type: "bool"
         }
     },
@@ -31,25 +31,18 @@ module.exports = {
         const queryResults = await searchByCriteria(octokit, `*+org:${argv.organization}${formattedExtensionsString}`)
 
         for (const result of queryResults) {
-            const repoFullName = result.repository.full_name
+            const repoName = result.repository.name
 
-            if (reposMatchingExtensions[repoFullName]) {
-                reposMatchingExtensions[repoFullName].occurrences++
+            if (reposMatchingExtensions[repoName]) {
+                reposMatchingExtensions[repoName].occurrences++
             } else {
-                if (argv.count) {
-                    const fileSearch = await octokit.rest.search.code({
-                        q: `*+repo:${repoFullName}`
-                    })
-                    count++
-    
-                    reposMatchingExtensions[repoFullName] = {
-                        occurrences: 1,
-                        total_file_count: fileSearch.data.total_count
-                    }
-                } else {
-                    reposMatchingExtensions[repoFullName] = {
-                        occurrences: 1
-                    }
+                const repoFileCount = await listFileCountInRepository(octokit, argv.organization, repoName)
+
+                console.log(repoName)
+                console.log(repoFileCount)
+                reposMatchingExtensions[repoName] = {
+                    occurrences: 1,
+                    total_file_count: repoFileCount
                 }
             }
         }

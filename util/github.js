@@ -44,6 +44,24 @@ const listAllReposForTeam = (octokit, organization, team_slug) =>
         team_slug: team_slug
     });
 
+const listFileCountInRepository = async (octokit, organization, repository) => {
+    const repositoryInfo = await octokit.rest.repos.get({
+        owner: organization,
+        repo: repository
+    });
+
+    const repoTree = await octokit.rest.git.getTree({
+        owner: organization,
+        repo: repository,
+        tree_sha: repositoryInfo.data.default_branch,
+        recursive: true
+    })
+
+    const repoFiles = repoTree.data.tree.filter((file) => file.type !== 'tree')
+
+    return repoFiles.length
+}
+
 const searchByCriteria = (octokit, searchString) =>
     octokit.paginate(octokit.rest.search.code, {
         q: searchString,
@@ -56,5 +74,6 @@ module.exports = {
     listAllCollaboratorsInRepository,
     listAllTeamsInOrganization,
     listAllReposForTeam,
+    listFileCountInRepository,
     searchByCriteria
 };
