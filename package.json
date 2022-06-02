@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "This is a collection of scripts for exploring GitHub teams, organizations, and enterprises",
   "main": "index.js",
+  "engines": {
+    "node": ">=16"
+  },
   "scripts": {
     "lint": "eslint .",
     "lintfix": "eslint --fix .",
