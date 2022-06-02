@@ -79,16 +79,16 @@ Example - enable secret scanning on all repositories within the `OneGHEOrg` orga
 $ node cli.js enable-secret-scanning -o OneGHEOrg -d "1 month"
 ```
 
-### List Repos Matching Extensions
+### List Repos With File Extensions
 
 Given a GitHub Organization, find each repository containing specific file extensions, number of occurrences, and total files in repo
 
 ```bash
-$ node cli.js list-repos-matching-extensions --help
+$ node cli.js list-repos-with-file-extensions --help
 ```
 
 Example:
 
 ```bash
-$ node cli.js list-repos-matching-extensions -o OneGHEOrg -e jar,war,ear
+$ node cli.js list-repos-with-file-extensions -o OneGHEOrg -e jar -e war
 ```
