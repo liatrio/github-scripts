@@ -1,0 +1,8 @@
+root: true
+env:
+  es2021: true
+  node: true
+extends:
+  - "@liatrio/eslint-config"
+parserOptions:
+  ecmaVersion: 11
