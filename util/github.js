@@ -2,8 +2,8 @@ const listAllRepositoriesInOrganization = async (octokit, organization) => {
     const repositories = await octokit
         .paginate(octokit.rest.repos.listForOrg, {
             org: organization,
-            type: 'any',
-            per_page: 100
+            type: "any",
+            per_page: 100,
         });
 
     return repositories.filter((repository) => !repository.archived);
@@ -13,14 +13,14 @@ const listAllRepositoriesInOrganizationUpdatedAfterDate = async (octokit, organi
     const repositories = await octokit
         .paginate(octokit.rest.repos.listForOrg, {
             org: organization,
-            type: 'any',
-            per_page: 100
+            type: "any",
+            per_page: 100,
         });
 
     return repositories
         .filter((repository) => !repository.archived)
         .filter((repository) => {
-            const lastPushedDate = new Date(repository.pushed_at)
+            const lastPushedDate = new Date(repository.pushed_at);
 
             return lastPushedDate > date;
         });
@@ -35,13 +35,13 @@ const listAllCollaboratorsInRepository = (octokit, organization, repository) =>
 
 const listAllTeamsInOrganization = (octokit, organization) =>
     octokit.paginate(octokit.rest.teams.list, {
-        org: organization
+        org: organization,
     });
 
-const listAllReposForTeam = (octokit, organization, team_slug) =>
+const listAllReposForTeam = (octokit, organization, teamSlug) =>
     octokit.paginate(octokit.rest.teams.listReposInOrg, {
         org: organization,
-        team_slug: team_slug
+        team_slug: teamSlug,
     });
 
 const listFileCountInRepository = async (octokit, organization, repository) => {
@@ -55,7 +55,7 @@ const listFileCountInRepository = async (octokit, organization, repository) => {
         repo: repository,
         tree_sha: repositoryInfo.data.default_branch,
         recursive: true
-    })
+    });
 
     const repoFiles = repoTree.data.tree.filter((file) => file.type !== 'tree')
 

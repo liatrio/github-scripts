@@ -37,9 +37,7 @@ module.exports = {
                 reposMatchingExtensions[repoName].occurrences++
             } else {
                 const repoFileCount = await listFileCountInRepository(octokit, argv.organization, repoName)
-
-                console.log(repoName)
-                console.log(repoFileCount)
+                
                 reposMatchingExtensions[repoName] = {
                     occurrences: 1,
                     total_file_count: repoFileCount
