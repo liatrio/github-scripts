@@ -15,17 +15,11 @@ module.exports = {
             describe: "an array of extensions being searched for",
             type: "array",
         },
-        count: {
-            alias: "c",
-            default: false,
-            describe: "boolean flag to enable total count of files, will drastically increase execution time",
-            type: "bool",
-        },
     },
     action: async (octokit, argv) => {
         const reposMatchingExtensions = {};
 
-        const formattedExtensionsString = "+extension:" + argv.extensions.join("+extension:");
+        const formattedExtensionsString = `+extension:${argv.extensions.join("+extension:")}`;
 
         const queryResults = await searchByCriteria(octokit, `*+org:${argv.organization}${formattedExtensionsString}`);
 
