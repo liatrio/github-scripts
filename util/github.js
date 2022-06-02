@@ -46,7 +46,8 @@ const listAllReposForTeam = (octokit, organization, team_slug) =>
 
 const searchByCriteria = (octokit, searchString) =>
     octokit.paginate(octokit.rest.search.code, {
-        q: searchString
+        q: searchString,
+        per_page: 100
     });
 
 module.exports = {
