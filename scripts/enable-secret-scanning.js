@@ -1,6 +1,7 @@
 const { bold } = require("kleur");
 const parseDuration = require("parse-duration");
 
+const { GITHUB_API_URL } = require("../util/constants");
 const { warn, success, info, list, confirm } = require("../util/log");
 const { listAllRepositoriesInOrganization, listAllRepositoriesInOrganizationUpdatedAfterDate } = require("../util/github");
 
@@ -113,7 +114,7 @@ module.exports = {
                 ) {
                     success(`Enabling GitHub Advanced Security features for repository ${argv.organization}/${repository}`);
 
-                    if (!data.private) { // advanced security is always enabled for public repos
+                    if (!data.private && argv["api-url"] === GITHUB_API_URL) { // advanced security is always enabled for public repos on github.com
                         delete securityAndAnalysisPayload.advanced_security;
                     }
 
