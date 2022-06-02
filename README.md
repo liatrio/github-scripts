@@ -18,6 +18,12 @@ This is a CLI that can be used to invoke a collection of helpful scripts for int
 $ node cli.js --help
 ```
 
+There are two global options for every command:
+- `-t, --token` is used to specify the personal access token that the CLI will use for authentication. You can also set
+  this with the `GITHUB_TOKEN` environment variable.
+- `-u, --api-url` is used to specify the base API url, which can be set in order to work with GitHub Enterprise Server.
+  This defaults to the base API url of github.com. You can also set this with the `GITHUB_API_URL` environment variable.
+
 ### List Languages In Organization
 
 Given a GitHub Organization, list the languages used within each repository.
