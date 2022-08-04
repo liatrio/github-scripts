@@ -57,7 +57,7 @@ module.exports = {
             hasNextPage = enterpriseInfo.enterprise.organizations.pageInfo.hasNextPage;
             // workaround to avoid code duplication on next line, allows null initial value which graphql requires
             // eslint-disable-next-line prefer-template, quotes
-            endCursor = '"' + enterpriseInfo.enterprise.organizations.pageInfo.endCursor + '"';
+            endCursor = `"${enterpriseInfo.enterprise.organizations.pageInfo.endCursor}"`;
 
             const allOrgsInEnterprise = enterpriseInfo.enterprise.organizations.nodes.map((org) => org.url.slice(org.url.lastIndexOf("/") + 1));
 
