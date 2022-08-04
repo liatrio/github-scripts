@@ -1,4 +1,3 @@
-const { exit } = require("yargs");
 const { listAllRepositoriesInOrganization } = require("../util/github");
 
 const getTotalCodeSizeInBytes = (obj) => Object.values(obj).reduce((accumulator, value) => accumulator + value, 0);
@@ -20,54 +19,57 @@ module.exports = {
         },
     },
     action: async (octokit, graphql, argv) => {
-        let organdrepo = [];
+        const organdrepo = [];
         let hasNextPage = true;
+        // workaround to avoid code duplication on next line, allows actual null initial value which graphql requires
+        // eslint-disable-next-line unicorn/no-null
         let endCursor = null;
         const languagesInEnterprise = {};
 
         while (hasNextPage) {
-          const enterpriseInfo = await graphql(`
-            query ListOrgs {
-              viewer {
-                login
-              }
-              enterprise(slug: "${argv.enterprise}") {
-                id
-                organizations(
-                    first: 100
-                    after: ${endCursor}
-                  ) {
-                  nodes {
-                    url
+            const enterpriseInfo = await graphql(`
+                query ListOrgs {
+                  viewer {
+                    login
                   }
-                  pageInfo {
-                    startCursor
-                    hasPreviousPage
-                    hasNextPage
-                    endCursor
+                  enterprise(slug: "${argv.enterprise}") {
+                    id
+                    organizations(
+                        first: 100
+                        after: ${endCursor}
+                      ) {
+                      nodes {
+                        url
+                      }
+                      pageInfo {
+                        startCursor
+                        hasPreviousPage
+                        hasNextPage
+                        endCursor
+                      }
+                    }
+                    slug
+                    name
                   }
                 }
-                slug
-                name
-              }
+            `);
+
+            hasNextPage = enterpriseInfo.enterprise.organizations.pageInfo.hasNextPage;
+            // workaround to avoid code duplication on next line, allows actual null initial value which graphql requires
+            // eslint-disable-next-line prefer-template, quotes
+            endCursor = '"' + enterpriseInfo.enterprise.organizations.pageInfo.endCursor + '"';
+
+            const allOrgsInEnterprise = enterpriseInfo.enterprise.organizations.nodes.map((org) => org.url.slice(org.url.lastIndexOf("/") + 1));
+
+            for (const org of allOrgsInEnterprise) {
+                const repositories = await listAllRepositoriesInOrganization(octokit, org);
+                for (const repo of repositories) {
+                    organdrepo.push({
+                        organization: org,
+                        repository: repo.name,
+                    });
+                }
             }
-          `);
-
-          
-          hasNextPage = enterpriseInfo.enterprise.organizations.pageInfo.hasNextPage;
-          endCursor = '"' + enterpriseInfo.enterprise.organizations.pageInfo.endCursor + '"';
-
-          const allOrgsInEnterprise = enterpriseInfo.enterprise.organizations.nodes.map((org) => org.url.slice(org.url.lastIndexOf("/") + 1));
-
-          for (const org of allOrgsInEnterprise) {
-              const repositories = await listAllRepositoriesInOrganization(octokit, org);
-              for (const repo of repositories) {
-                  organdrepo.push({
-                      organization: org,
-                      repository: repo.name,
-                  })
-              }
-          }
         }
 
         for (const repository of organdrepo) {
@@ -83,17 +85,16 @@ module.exports = {
 
                 if (languagesInEnterprise[language] && percent >= argv.percent) {
                     languagesInEnterprise[language].count++;
-                    languagesInEnterprise[language].repos.push(repository.organization + "/" + repository.repository);
+                    languagesInEnterprise[language].repos.push(`${repository.organization}/${repository.repository}`);
                 } else {
                     languagesInEnterprise[language] = {
                         count: 1,
-                        repos: [repository.organization + "/" + repository.repository],
+                        repos: [`${repository.organization}/${repository.repository}`],
                     };
                 }
             }
         }
 
         console.table(languagesInEnterprise);
-
     },
 };
