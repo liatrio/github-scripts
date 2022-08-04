@@ -21,7 +21,7 @@ module.exports = {
     action: async (octokit, graphql, argv) => {
         const organdrepo = [];
         let hasNextPage = true;
-        // workaround to avoid code duplication on next line, allows actual null initial value which graphql requires
+        // workaround to avoid code duplication on next line, allows null initial value which graphql requires
         // eslint-disable-next-line unicorn/no-null
         let endCursor = null;
         const languagesInEnterprise = {};
@@ -55,7 +55,7 @@ module.exports = {
             `);
 
             hasNextPage = enterpriseInfo.enterprise.organizations.pageInfo.hasNextPage;
-            // workaround to avoid code duplication on next line, allows actual null initial value which graphql requires
+            // workaround to avoid code duplication on next line, allows null initial value which graphql requires
             // eslint-disable-next-line prefer-template, quotes
             endCursor = '"' + enterpriseInfo.enterprise.organizations.pageInfo.endCursor + '"';
 
