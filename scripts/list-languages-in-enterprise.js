@@ -64,7 +64,7 @@ module.exports = {
             for (const org of allOrgsInEnterprise) {
                 const repositories = await listAllRepositoriesInOrganization(octokit, org);
                 for (const repo of repositories) {
-                    organdrepo.push({
+                    orgAndRepo.push({
                         organization: org,
                         repository: repo.name,
                     });
@@ -72,7 +72,7 @@ module.exports = {
             }
         }
 
-        for (const repository of organdrepo) {
+        for (const repository of orgAndRepo) {
             const languages = await octokit.rest.repos.listLanguages({
                 owner: repository.organization,
                 repo: repository.repository,
