@@ -38,6 +38,21 @@ Example:
 $ node cli.js list-languages-in-organization -o OneGHEOrg
 ```
 
+### List Languages In Enterprise
+
+Given a GitHub Enterprise, find all Organizations in it, and list the languages used within each repository.
+
+_NOTE: Token used to run this option MUST have permission to list Orgs and Repos within for every Org in the Enterprise_
+
+```bash
+$ node cli.js list-languages-in-enterprise --help
+```
+
+Example:
+
+```bash
+$ node cli.js list-languages-in-enterprise -e liatrio-partnerdemo
+```
 ### Reassign Repository Roles
 
 Given a GitHub Organization, find each collaborator in each repository with a specific role, and update this role to a new one.

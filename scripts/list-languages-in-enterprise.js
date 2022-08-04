@@ -1,7 +1,6 @@
 const { exit } = require("yargs");
 const { listAllRepositoriesInOrganization } = require("../util/github");
 
-const { error, warn, success, info, list } = require("../util/log");
 const getTotalCodeSizeInBytes = (obj) => Object.values(obj).reduce((accumulator, value) => accumulator + value, 0);
 
 module.exports = {
@@ -22,56 +21,59 @@ module.exports = {
     },
     action: async (octokit, graphql, argv) => {
         let organdrepo = [];
+        let hasNextPage = true;
+        let endCursor = null;
         const languagesInEnterprise = {};
 
-        const enterpriseInfo = await graphql(`
-          query ListOrgs {
-            viewer {
-              login
-            }
-            enterprise(slug: "${argv.enterprise}") {
-              id
-              organizations(first: 100) {
-                nodes {
-                  url
-                }
-                pageInfo {
-                  startCursor
-                  hasPreviousPage
-                  hasNextPage
-                  endCursor
-                }
+        while (hasNextPage) {
+          const enterpriseInfo = await graphql(`
+            query ListOrgs {
+              viewer {
+                login
               }
-              slug
-              name
+              enterprise(slug: "${argv.enterprise}") {
+                id
+                organizations(
+                    first: 100
+                    after: ${endCursor}
+                  ) {
+                  nodes {
+                    url
+                  }
+                  pageInfo {
+                    startCursor
+                    hasPreviousPage
+                    hasNextPage
+                    endCursor
+                  }
+                }
+                slug
+                name
+              }
             }
+          `);
+
+          
+          hasNextPage = enterpriseInfo.enterprise.organizations.pageInfo.hasNextPage;
+          endCursor = '"' + enterpriseInfo.enterprise.organizations.pageInfo.endCursor + '"';
+
+          const allOrgsInEnterprise = enterpriseInfo.enterprise.organizations.nodes.map((org) => org.url.slice(org.url.lastIndexOf("/") + 1));
+
+          for (const org of allOrgsInEnterprise) {
+              const repositories = await listAllRepositoriesInOrganization(octokit, org);
+              for (const repo of repositories) {
+                  organdrepo.push({
+                      organization: org,
+                      repository: repo.name,
+                  })
+              }
           }
-        `);
-
-        const allOrgsInEnterprise = enterpriseInfo.enterprise.organizations.nodes.map((org) => org.url.slice(org.url.lastIndexOf("/") + 1));
-
-        for (const org of allOrgsInEnterprise) {
-            const repositories = await listAllRepositoriesInOrganization(octokit, org);
-            for (const repo of repositories) {
-                organdrepo.push({
-                    organization: org,
-                    repository: repo.name,
-                })
-            }
         }
 
-        // for (const thing in organdrepo) {
-        //   console.log(thing);
-        // }
-        console.log(organdrepo);
-        exit();
-
-        //const repositories = await listAllRepositoriesInEnterprise(octokit, argv.organization);
-
-        for (const repository of repositories) {
+        for (const repository of organdrepo) {
             const languages = await octokit.rest.repos.listLanguages({
-                owner: argv.organization,
-                repo: repository.name,
+                owner: repository.organization,
+                repo: repository.repository,
             });
 
             const sumBytes = getTotalCodeSizeInBytes(languages.data);
@@ -79,18 +81,19 @@ module.exports = {
             for (const language in languages.data) {
                 const percent = Math.round((languages.data[language] / sumBytes) * 100);
 
-                if (languagesInOrg[language] && percent >= argv.percent) {
-                    languagesInOrg[language].count++;
-                    languagesInOrg[language].repos.push(repository.name);
+                if (languagesInEnterprise[language] && percent >= argv.percent) {
+                    languagesInEnterprise[language].count++;
+                    languagesInEnterprise[language].repos.push(repository.organization + "/" + repository.repository);
                 } else {
-                    languagesInOrg[language] = {
+                    languagesInEnterprise[language] = {
                         count: 1,
-                        repos: [repository.name],
+                        repos: [repository.organization + "/" + repository.repository],
                     };
                 }
             }
         }
 
-        console.table(languagesInOrg);
+        console.table(languagesInEnterprise);
+
     },
 };
