@@ -21,7 +21,7 @@ module.exports = {
         },
     },
     action: async (octokit, graphql, argv) => {
-        let organdrepo = {};
+        let organdrepo = [];
         const languagesInEnterprise = {};
 
         const enterpriseInfo = await graphql(`
@@ -53,13 +53,16 @@ module.exports = {
         for (const org of allOrgsInEnterprise) {
             const repositories = await listAllRepositoriesInOrganization(octokit, org);
             for (const repo of repositories) {
-                organdrepo += {
+                organdrepo.push({
                     organization: org,
                     repository: repo.name,
-                }
+                })
             }
         }
 
+        // for (const thing in organdrepo) {
+        //   console.log(thing);
+        // }
         console.log(organdrepo);
         exit();
 
