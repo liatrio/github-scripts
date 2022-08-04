@@ -19,7 +19,7 @@ module.exports = {
         },
     },
     action: async (octokit, graphql, argv) => {
-        const organdrepo = [];
+        const orgAndRepo = [];
         let hasNextPage = true;
         // workaround to avoid code duplication on next line, allows null initial value which graphql requires
         // eslint-disable-next-line unicorn/no-null
