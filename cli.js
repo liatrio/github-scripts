@@ -1,5 +1,6 @@
 const yargs = require("yargs/yargs");
 const { Octokit } = require("@octokit/rest");
+let { graphql } = require("@octokit/graphql");
 const { hideBin } = require("yargs/helpers");
 const fs = require("node:fs/promises");
 const path = require("node:path");
@@ -46,7 +47,14 @@ const { GITHUB_API_URL } = require("./util/constants");
         baseUrl: argv["api-url"],
     });
 
+    graphql = graphql.defaults({
+        baseUrl: argv["api-url"],
+        headers: {
+            authorization: `token ${argv.token}`,
+        },
+    });
+
     console.log();
 
-    await actions[argv._[0]](octokit, argv);
+    await actions[argv._[0]](octokit, graphql, argv);
 })();

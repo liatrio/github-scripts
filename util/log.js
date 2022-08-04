@@ -1,6 +1,8 @@
 const emoji = require("node-emoji");
 const prompts = require("prompts");
 
+const error = (message) => console.error(`${emoji.get("x_mark")} ${message}`);
+
 const warn = (message) => console.log(`${emoji.get("warning")}  ${message}`);
 
 const success = (message) => console.log(`${emoji.get("white_check_mark")}  ${message}`);
@@ -27,6 +29,7 @@ const confirm = async (message = "Are you sure you wish to continue?") => {
 
 module.exports = {
     success,
+    error,
     warn,
     info,
     list,

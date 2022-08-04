@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/liatrio/github-discovery#readme",
   "dependencies": {
+    "@octokit/graphql": "^5.0.0",
     "@octokit/rest": "^18.12.0",
     "kleur": "^4.1.4",
     "node-emoji": "^1.11.0",
