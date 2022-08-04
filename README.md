@@ -42,7 +42,7 @@ $ node cli.js list-languages-in-organization -o OneGHEOrg
 
 Given a GitHub Enterprise, find all Organizations in it, and list the languages used within each repository.
 
-_NOTE: Token used to run this option MUST have permission to list Orgs and Repos within for every Org in the Enterprise_
+_NOTE: Token used to run this option MUST have permission to list Orgs and Repos for every Org in the Enterprise_
 
 ```bash
 $ node cli.js list-languages-in-enterprise --help
