@@ -47,8 +47,15 @@ const { GITHUB_API_URL } = require("./util/constants");
         baseUrl: argv["api-url"],
     });
 
+    let graphqlEndPoint = "";
+    if (!argv["api-url"].includes("api.github.com")) {
+        graphqlEndPoint = argv["api-url"].slice(0, argv["api-url"].lastIndexOf("/"));
+    } else {
+        graphqlEndPoint = argv["api-url"];
+    }
+
     graphql = graphql.defaults({
-        baseUrl: argv["api-url"],
+        baseUrl: graphqlEndPoint,
         headers: {
             authorization: `token ${argv.token}`,
         },
