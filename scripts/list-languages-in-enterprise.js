@@ -1,4 +1,5 @@
 const { listAllRepositoriesInOrganization } = require("../util/github");
+const moment = require("moment");
 
 const getTotalCodeSizeInBytes = (obj) => Object.values(obj).reduce((accumulator, value) => accumulator + value, 0);
 
@@ -59,8 +60,22 @@ module.exports = {
 
             const allOrgsInEnterprise = enterpriseInfo.enterprise.organizations.nodes.map((org) => org.url.slice(org.url.lastIndexOf("/") + 1));
 
+            const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
+
             for (const org of allOrgsInEnterprise) {
-                const repositories = await listAllRepositoriesInOrganization(octokit, org);
+                const rateLimitState = await octokit.rest.rateLimit.get();
+                const reset = moment(rateLimitState.data.rate.reset * 1000).format("h:mm:ss a");
+                let repositories;
+
+                if (rateLimitState.data.rate.remaining > 0) {
+                    repositories = await listAllRepositoriesInOrganization(octokit, org);
+                } else {
+                    const unixTime = Math.floor(Date.now() / 1000);
+                    console.log(`Rate limit reached. :( Waiting until ${reset}`);
+                    await sleep((rateLimitState.data.rate.reset - unixTime) * 1000);
+                    repositories = await listAllRepositoriesInOrganization(octokit, org);
+                }
+
                 for (const repo of repositories) {
                     orgAndRepo.push({
                         organization: org,

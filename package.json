@@ -26,6 +26,7 @@
     "@octokit/graphql": "^5.0.0",
     "@octokit/rest": "^18.12.0",
     "kleur": "^4.1.4",
+    "moment": "^2.29.4",
     "node-emoji": "^1.11.0",
     "parse-duration": "^1.0.2",
     "prompts": "^2.4.2",
