@@ -6,7 +6,9 @@ const listAllRepositoriesInOrganization = async (octokit, organization) => {
             per_page: 100,
         });
 
-    return repositories.filter((repository) => !repository.archived);
+    return repositories
+        .filter((repository) => !repository.archived)
+        .filter((repository) => !repository.disabled);
 };
 
 const listAllRepositoriesInOrganizationUpdatedAfterDate = async (octokit, organization, date) => {
