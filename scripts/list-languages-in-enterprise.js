@@ -70,11 +70,17 @@ module.exports = {
             }
         }
 
+        let languages;
+
         for (const repository of orgAndRepo) {
-            const languages = await octokit.rest.repos.listLanguages({
-                owner: repository.organization,
-                repo: repository.repository,
-            });
+            try {
+                languages = await octokit.rest.repos.listLanguages({
+                    owner: repository.organization,
+                    repo: repository.repository,
+                });
+            } catch (error) {
+                console.log(`Exception listing languages for [${repository.organization}/${repository.repository}]: [${error}]`);
+            }
 
             const sumBytes = getTotalCodeSizeInBytes(languages.data);
 
