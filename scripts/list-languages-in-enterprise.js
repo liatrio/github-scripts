@@ -94,7 +94,7 @@ module.exports = {
                     repo: repository.repository,
                 });
             } catch (error) {
-                console.log(`Exception listing languages for ${repository.organization}/${repository.repository}: ${error}`);
+                console.log(`Exception listing languages for [${repository.organization}/${repository.repository}]: [${error}]`);
             }
 
             const sumBytes = getTotalCodeSizeInBytes(languages.data);
