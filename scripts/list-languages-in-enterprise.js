@@ -25,7 +25,6 @@ module.exports = {
         // eslint-disable-next-line unicorn/no-null
         let endCursor = null;
         const languagesInEnterprise = {};
-        const start = Date.now();
         const summary = [];
 
         while (hasNextPage) {
@@ -111,8 +110,5 @@ module.exports = {
         console.log("\nSummary", summary);
         console.log("\nRaw JSON output", languagesInEnterprise);
         console.table(languagesInEnterprise);
-        const end = Date.now();
-        const duration = end - start;
-        console.log(`Script took [${duration / 1000}] seconds`);
     },
 };
