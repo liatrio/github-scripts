@@ -25,6 +25,8 @@ module.exports = {
         // eslint-disable-next-line unicorn/no-null
         let endCursor = null;
         const languagesInEnterprise = {};
+        const start = Date.now();
+        const summary = [];
 
         while (hasNextPage) {
             const enterpriseInfo = await graphql(`
@@ -61,6 +63,10 @@ module.exports = {
 
             for (const org of allOrgsInEnterprise) {
                 const repositories = await listAllRepositoriesInOrganization(octokit, org);
+                summary.push({
+                    organization: org,
+                    repoCount: repositories.length,
+                });
                 for (const repo of repositories) {
                     orgAndRepo.push({
                         organization: org,
@@ -71,6 +77,7 @@ module.exports = {
         }
 
         let languages;
+        const failedRepos = [];
 
         for (const repository of orgAndRepo) {
             try {
@@ -80,6 +87,7 @@ module.exports = {
                 });
             } catch (error) {
                 console.log(`Exception listing languages for [${repository.organization}/${repository.repository}]: [${error}]`);
+                failedRepos.push(`"${repository.organization}/${repository.repository}"`);
             }
 
             const sumBytes = getTotalCodeSizeInBytes(languages.data);
@@ -99,6 +107,12 @@ module.exports = {
             }
         }
 
+        console.log(`Number of repos with errors: [${failedRepos.length}]`);
+        console.log("\nSummary", summary);
+        console.log("\nRaw JSON output", languagesInEnterprise);
         console.table(languagesInEnterprise);
+        const end = Date.now();
+        const duration = end - start;
+        console.log(`Script took [${duration / 1000}] seconds`);
     },
 };
