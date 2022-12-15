@@ -37,7 +37,7 @@ module.exports = {
                 if (languagesInOrg[language] && percent >= argv.percent) {
                     languagesInOrg[language].count++;
                     languagesInOrg[language].repos.push(repository.name);
-                } else {
+                } else if(percent >= argv.percent) {
                     languagesInOrg[language] = {
                         count: 1,
                         repos: [repository.name],
