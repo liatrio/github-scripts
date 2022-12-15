@@ -16,7 +16,7 @@ module.exports = {
             type: "array",
         },
     },
-    action: async (octokit, argv) => {
+    action: async (octokit, _graphql, argv) => {
         const reposMatchingExtensions = {};
 
         const formattedExtensionsString = `+extension:${argv.extensions.join("+extension:")}`;
