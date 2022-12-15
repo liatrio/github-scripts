@@ -18,7 +18,7 @@ module.exports = {
             type: "number",
         },
     },
-    action: async (octokit, argv) => {
+    action: async (octokit, _graphql, argv) => {
         const languagesInOrg = {};
 
         const repositories = await listAllRepositoriesInOrganization(octokit, argv.organization);
