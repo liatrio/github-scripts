@@ -32,7 +32,7 @@ module.exports = {
             type: "bool",
         },
     },
-    action: async (octokit, argv) => {
+    action: async (octokit, _graphql, argv) => {
         const enablePushProtection = argv["enable-push-protection"];
         let repositories;
 
