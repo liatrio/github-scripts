@@ -20,7 +20,7 @@ module.exports = {
             type: "string",
         },
     },
-    action: async (octokit, argv) => {
+    action: async (octokit, _graphql, argv) => {
         const oldRole = argv["old-role"];
         const newRole = argv["new-role"];
 
