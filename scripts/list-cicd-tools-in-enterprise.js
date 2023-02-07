@@ -58,6 +58,26 @@ module.exports = {
         console.log(`Azure Pipelines: ${azurePipelinesResults.size}`);
         console.log(`GitHub Actions: ${githubActionsResults.size}`);
 
+        // Output to csv
+        // Convert to CSV function
+        const data = [["jenkins",jankinsResults],["azure", azurePipelinesResults],["github",githubActionsResults]]
+        var lineArray = [];
+
+        data.forEach(function (itemResults, index) {
+            var line = Array.from(itemResults[1]).join(",");
+            //lineArray.push(index == 0 ? "data:text/csv;charset=utf-8,\n" + itemResults[0]+","+ line: itemResults[0]+","+ line);
+            lineArray.push(index == 0 ? ",\n" + itemResults[0]+","+ line: itemResults[0]+","+ line);
+        });
+        var csvContent = lineArray.join("\n");
+
+        const fs = require('fs')
+
+        console.log(csvContent)
+        fs.writeFile('cicd-tools.csv', csvContent, (err) => {
+            if (err) throw err;
+        })
+
+
         /*const queryResults = await searchByCriteria(octokit, `${queryString}`);
 
         for (const result of queryResults) {
