@@ -29,8 +29,8 @@ module.exports = {
         const jankinsResults = new Set();
         const jankinsQueryString = `fork:true filename:Jenkinsfile`;
 
-        //const jankinsQueryResults = await searchByCriteria(octokit, `${jankinsQueryString} ${orgs.join(" ")}`);
-        const jankinsQueryResults = await searchByCriteria(octokit, `${jankinsQueryString}`);
+        const jankinsQueryResults = await searchByCriteria(octokit, `${jankinsQueryString} ${orgs.join(" ")}`);
+        //const jankinsQueryResults = await searchByCriteria(octokit, `${jankinsQueryString}`);
 
         for (const result of jankinsQueryResults) {
             jankinsResults.add(result.repository.full_name);
@@ -40,8 +40,8 @@ module.exports = {
         const azurePipelinesResults = new Set();
         const azurePipelinesQueryString = `fork:false extension:yml extension:yaml vmImage`;
 
-        //const azurePipelinesQueryResults = await searchByCriteria(octokit, `${azurePipelinesQueryString} ${orgs.join(" ")}`);
-        const azurePipelinesQueryResults = await searchByCriteria(octokit, `${azurePipelinesQueryString}`);
+        const azurePipelinesQueryResults = await searchByCriteria(octokit, `${azurePipelinesQueryString} ${orgs.join(" ")}`);
+        //const azurePipelinesQueryResults = await searchByCriteria(octokit, `${azurePipelinesQueryString}`);
 
         for (const result of azurePipelinesQueryResults) {
             azurePipelinesResults.add(result.repository.full_name);
@@ -51,8 +51,8 @@ module.exports = {
         const githubActionsResults = new Set();
         const githubActionsQueryString = `fork:true path:/.github/workflows extension:yml extension:yaml runs-on:`;
 
-        //const githubActionsQueryResults = await searchByCriteria(octokit, `${githubActionsQueryString} ${orgs.join(" ")}`);
-        const githubActionsQueryResults = await searchByCriteria(octokit, `${githubActionsQueryString}`);
+        const githubActionsQueryResults = await searchByCriteria(octokit, `${githubActionsQueryString} ${orgs.join(" ")}`);
+        //const githubActionsQueryResults = await searchByCriteria(octokit, `${githubActionsQueryString}`);
 
         for (const result of githubActionsQueryResults) {
             githubActionsResults.add(result.repository.full_name);
