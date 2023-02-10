@@ -24,37 +24,44 @@ module.exports = {
             const orgs = argv.organization.split(",").map(org => `org:${org}`);
         }
 
+        let count = 0;
+
         const jankinsResults = new Set();
-        const jankinsQueryString = `filename:Jenkinsfile`;
+        const jankinsQueryString = `fork:true filename:Jenkinsfile`;
 
         //const jankinsQueryResults = await searchByCriteria(octokit, `${jankinsQueryString} ${orgs.join(" ")}`);
         const jankinsQueryResults = await searchByCriteria(octokit, `${jankinsQueryString}`);
 
         for (const result of jankinsQueryResults) {
             jankinsResults.add(result.repository.full_name);
+            count++;
         }
 
         const azurePipelinesResults = new Set();
-        const azurePipelinesQueryString = `extension:yml extension:yaml vmImage`;
+        const azurePipelinesQueryString = `fork:false extension:yml extension:yaml vmImage`;
 
         //const azurePipelinesQueryResults = await searchByCriteria(octokit, `${azurePipelinesQueryString} ${orgs.join(" ")}`);
         const azurePipelinesQueryResults = await searchByCriteria(octokit, `${azurePipelinesQueryString}`);
 
         for (const result of azurePipelinesQueryResults) {
             azurePipelinesResults.add(result.repository.full_name);
+            count++;
         }
 
         const githubActionsResults = new Set();
-        const githubActionsQueryString = `path:/.github/workflows extension:yml extension:yaml runs-on:`;
+        const githubActionsQueryString = `fork:true path:/.github/workflows extension:yml extension:yaml runs-on:`;
 
         //const githubActionsQueryResults = await searchByCriteria(octokit, `${githubActionsQueryString} ${orgs.join(" ")}`);
         const githubActionsQueryResults = await searchByCriteria(octokit, `${githubActionsQueryString}`);
 
         for (const result of githubActionsQueryResults) {
             githubActionsResults.add(result.repository.full_name);
+            count++;
         }
 
         // print count of repos using each tool
+        console.log(`Total Repos Searched: ${count}`);
+
         console.log(`Jenkins: ${jankinsResults.size}`);
         console.log(`Azure Pipelines: ${azurePipelinesResults.size}`);
         console.log(`GitHub Actions: ${githubActionsResults.size}`);
@@ -63,6 +70,19 @@ module.exports = {
         const data = [["jenkins",jankinsResults],["azure", azurePipelinesResults],["github",githubActionsResults]]
         
         convertTupleToCSVColumns(data, "cicd-tools.csv")
+
+
+        const javaResults = new Set();
+        const javaQueryString = `language:java`;
+
+        //const javaQueryResults = await searchByCriteria(octokit, `${javaQueryString} ${orgs.join(" ")}`);
+        const javaQueryResults = await searchByCriteria(octokit, `language:java`);
+
+        for (const result of javaQueryResults) {
+            javaResults.add(result.repository.full_name);
+        }
+
+        console.log(`java: ${javaResults.size}`);
 
 
         /*const queryResults = await searchByCriteria(octokit, `${queryString}`);
