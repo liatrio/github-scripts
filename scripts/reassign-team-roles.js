@@ -1,4 +1,4 @@
-const { listAllTeamsInOrganization, listAllReposForTeam } = require("../util/github");
+const { listAllTeamsInOrganization, listAllReposForTeam, listAllRolesInOrg } = require("../util/github");
 
 module.exports = {
     description: "globally reassign permissions for all teams within an organization",
@@ -25,10 +25,12 @@ module.exports = {
         const newRole = argv["new-role"];
 
         const teams = await listAllTeamsInOrganization(octokit, argv.organization);
-
+        const roleNames = listAllRolesInOrg(octokit, argv.organization);
+        const roleName = roleNames
+        console.log(`All Custom Roles in Organization: ${roleName}`)
         for (const team of teams) {
             const repositories = await listAllReposForTeam(octokit, argv.organization, team.slug);
-
+            console.log(`Team Name: ${team.slug}`)
             for (const repo of repositories) {
                 if (repo.role_name === oldRole) {
                     console.log(`Updating team ${team.slug} for repository ${argv.organization}/${repo.name} from ${oldRole} to ${newRole}`);

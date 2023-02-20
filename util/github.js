@@ -68,6 +68,11 @@ const searchByCriteria = (octokit, searchString) =>
         per_page: 100,
     });
 
+const listAllRolesInOrg = (octokit, organization) =>
+    octokit.rest.orgs.listCustomRoles({
+        organization,
+    });
+
 module.exports = {
     listAllRepositoriesInOrganization,
     listAllRepositoriesInOrganizationUpdatedAfterDate,
@@ -76,4 +81,5 @@ module.exports = {
     listAllReposForTeam,
     listFileCountInRepository,
     searchByCriteria,
+    listAllRolesInOrg
 };
