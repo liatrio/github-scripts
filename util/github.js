@@ -1,3 +1,12 @@
+const getTeamBySlug = async (octokit, organization, teamSlug) => {
+    const team = await octokit.rest.teams.getByName ({
+        org: organization,
+        team_slug: teamSlug,
+    });
+
+    return team.data;
+};
+
 const listAllRepositoriesInOrganization = async (octokit, organization) => {
     const repositories = await octokit
         .paginate(octokit.rest.repos.listForOrg, {
@@ -69,6 +78,7 @@ const searchByCriteria = (octokit, searchString) =>
     });
 
 module.exports = {
+    getTeamBySlug,
     listAllRepositoriesInOrganization,
     listAllRepositoriesInOrganizationUpdatedAfterDate,
     listAllCollaboratorsInRepository,

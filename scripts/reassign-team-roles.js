@@ -1,4 +1,4 @@
-const { listAllTeamsInOrganization, listAllReposForTeam } = require("../util/github");
+const { getTeamBySlug, listAllTeamsInOrganization, listAllReposForTeam } = require("../util/github");
 
 module.exports = {
     description: "globally reassign permissions for all teams within an organization",
@@ -6,7 +6,12 @@ module.exports = {
         "organization": {
             alias: "o",
             demandOption: true,
-            describe: "the GitHub organization containing the teams to reassign roles",
+            describe: "the GitHub organization containing the team(s) to reassign roles",
+            type: "string",
+        },
+        "team-slug": {
+            demandOption: false,
+            describe: "a specific GitHub team slug to reassign the role to",
             type: "string",
         },
         "old-role": {
@@ -23,11 +28,30 @@ module.exports = {
     action: async (octokit, _graphql, argv) => {
         const oldRole = argv["old-role"];
         const newRole = argv["new-role"];
+        const teamSlug = argv["team-slug"];
+        let teams = [];
+        let repositories = [];
 
-        const teams = await listAllTeamsInOrganization(octokit, argv.organization);
+        // If no team is specified, we will loop through all teams in the organization
+        if (!teamSlug) {
+            teams = await listAllTeamsInOrganization(octokit, argv.organization);
+            console.log(`Found ${teams.length} teams in organization '${argv.organization}'.`);
+        } else {
+            try {
+                teams.push(await getTeamBySlug(octokit, argv.organization, teamSlug));
+                console.log(`Found team '${teamSlug}' in organization '${argv.organization}'.`)
+            } // catch http error
+            catch (error) {
+                console.log(`Error: ${error}\nPlease make sure the team slug provided exists within the provided organization and try again.`);
+            }
+        }
 
         for (const team of teams) {
-            const repositories = await listAllReposForTeam(octokit, argv.organization, team.slug);
+            try {
+                repositories = await listAllReposForTeam(octokit, argv.organization, team.slug);
+            } catch (error) {
+                console.log(`Error: ${error}\nTeam ${team.slug} does not have any repositories.`);
+            }
             let reposUpdated = 0;
 
             console.log(`Checking team '${team.slug}' for repositories with role '${oldRole}'...`);
