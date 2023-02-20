@@ -28,9 +28,9 @@ module.exports = {
 
         for (const team of teams) {
             const repositories = await listAllReposForTeam(octokit, argv.organization, team.slug);
-            reposUpdated = 0;
+            let reposUpdated = 0;
 
-            console.log(`Checking team '${team.slug}' for repositories with role '${oldRole}'...`)
+            console.log(`Checking team '${team.slug}' for repositories with role '${oldRole}'...`);
 
             for (const repo of repositories) {
                 if (repo.role_name === oldRole) {
@@ -46,6 +46,7 @@ module.exports = {
                     reposUpdated++;
                 }
             }
+
             if (reposUpdated > 0) {
                 console.log(`Finished checking team '${team.slug}'. Updated ${reposUpdated} repositories with role '${oldRole}' to '${newRole}'.`);
             } else {
