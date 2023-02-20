@@ -1,7 +1,6 @@
 const yargs = require("yargs/yargs");
 const { Octokit } = require("@octokit/rest");
 let { graphql } = require("@octokit/graphql");
-const { RequestError } = require("@octokit/request-error");
 const { hideBin } = require("yargs/helpers");
 const fs = require("node:fs/promises");
 const path = require("node:path");

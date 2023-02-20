@@ -39,9 +39,8 @@ module.exports = {
         } else {
             try {
                 teams.push(await getTeamBySlug(octokit, argv.organization, teamSlug));
-                console.log(`Found team '${teamSlug}' in organization '${argv.organization}'.`)
-            } // catch http error
-            catch (error) {
+                console.log(`Found team '${teamSlug}' in organization '${argv.organization}'.`);
+            } catch (error) {
                 console.log(`Error: ${error}\nPlease make sure the team slug provided exists within the provided organization and try again.`);
             }
         }
@@ -52,8 +51,8 @@ module.exports = {
             } catch (error) {
                 console.log(`Error: ${error}\nTeam ${team.slug} does not have any repositories.`);
             }
-            let reposUpdated = 0;
 
+            let reposUpdated = 0;
             console.log(`Checking team '${team.slug}' for repositories with role '${oldRole}'...`);
 
             for (const repo of repositories) {

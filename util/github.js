@@ -1,5 +1,5 @@
 const getTeamBySlug = async (octokit, organization, teamSlug) => {
-    const team = await octokit.rest.teams.getByName ({
+    const team = await octokit.rest.teams.getByName({
         org: organization,
         team_slug: teamSlug,
     });
