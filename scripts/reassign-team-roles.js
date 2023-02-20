@@ -28,10 +28,13 @@ module.exports = {
 
         for (const team of teams) {
             const repositories = await listAllReposForTeam(octokit, argv.organization, team.slug);
+            let reposUpdated = 0;
+
+            console.log(`Checking team '${team.slug}' for repositories with role '${oldRole}'...`);
 
             for (const repo of repositories) {
                 if (repo.role_name === oldRole) {
-                    console.log(`Updating team ${team.slug} for repository ${argv.organization}/${repo.name} from ${oldRole} to ${newRole}`);
+                    console.log(`Updating team '${team.slug}' for repository '${argv.organization}/${repo.name}' from role '${oldRole}' to '${newRole}'`);
 
                     await octokit.rest.teams.addOrUpdateRepoPermissionsInOrg({
                         org: argv.organization,
@@ -40,7 +43,14 @@ module.exports = {
                         repo: repo.name,
                         permission: newRole,
                     });
+                    reposUpdated++;
                 }
+            }
+
+            if (reposUpdated > 0) {
+                console.log(`Finished checking team '${team.slug}'. Updated ${reposUpdated} repositories with role '${oldRole}' to '${newRole}'.`);
+            } else {
+                console.log(`Finished checking team '${team.slug}'. No repositories with role '${oldRole}' found.`);
             }
         }
     },
