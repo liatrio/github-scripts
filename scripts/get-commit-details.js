@@ -33,15 +33,15 @@ module.exports = {
             const nowIso = now.toISOString();
 
             // ISO 8601 timestamp for x number of days ago
-            const thirtyDaysAgo = new Date(now.setDate(now.getDate() - argv.history_in_days));
-            const thirtyDaysAgoIso = thirtyDaysAgo.toISOString();
+            const daysAgo = new Date(now.setDate(now.getDate() - argv.history_in_days));
+            const daysAgoIso = daysAgo.toISOString();
 
             const enterpriseInfo = await _graphql(`
               {
                 repository(owner: "${argv.organization}", name: "${repository.name}") {
                   object(expression: "${repoInfo.data.default_branch}") {
                     ... on Commit {
-                      history(since: "${thirtyDaysAgoIso}", until: "${nowIso}") {
+                      history(since: "${daysAgoIso}", until: "${nowIso}") {
                         totalCount
                       }
                     }
