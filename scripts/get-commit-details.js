@@ -23,9 +23,10 @@ module.exports = {
         const repositories = await listAllRepositoriesInOrganization(octokit, argv.organization);
 
         for (const repository of repositories) {
-            const repoInfo = await octokit.rest.repos.get({
+            const branchInfo = await octokit.rest.repos.listBranches({
                 owner: argv.organization,
                 repo: repository.name,
+                per_page: 100,
             });
 
             // ISO 8601 timestamp for now
@@ -36,10 +37,13 @@ module.exports = {
             const daysAgo = new Date(now.setDate(now.getDate() - argv.history_in_days));
             const daysAgoIso = daysAgo.toISOString();
 
-            const commitStats = await _graphql(`
+            // console.log(JSON.stringify(branchInfo, undefined, 2));
+
+            for (const branch of branchInfo.data) {
+                const commitStats = await _graphql(`
               {
                 repository(owner: "${argv.organization}", name: "${repository.name}") {
-                  object(expression: "${repoInfo.data.default_branch}") {
+                  object(expression: "${branch.name}") {
                     ... on Commit {
                       history(since: "${daysAgoIso}", until: "${nowIso}") {
                         totalCount
@@ -50,12 +54,13 @@ module.exports = {
               }
             `);
 
-            // if total commits is not null, add it to the total
-            try {
-                totalCommits += commitStats.repository.object.history.totalCount;
-                console.log(`Total commits for ${repository.name} in last ${argv.history_in_days} days: ${commitStats.repository.object.history.totalCount}`);
-            } catch {
-                console.log(`No commits for ${repository.name}`);
+                // if total commits is not null, add it to the total
+                try {
+                    totalCommits += commitStats.repository.object.history.totalCount;
+                    console.log(`Total commits for repo:${repository.name}/branch:${branch.name} in last ${argv.history_in_days} days: ${commitStats.repository.object.history.totalCount}`);
+                } catch {
+                    console.log(`No commits for repo:${repository.name}/branch:${branch.name}`);
+                }
             }
         }
 
