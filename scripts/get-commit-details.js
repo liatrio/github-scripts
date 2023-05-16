@@ -36,7 +36,7 @@ module.exports = {
             const daysAgo = new Date(now.setDate(now.getDate() - argv.history_in_days));
             const daysAgoIso = daysAgo.toISOString();
 
-            const enterpriseInfo = await _graphql(`
+            const commitStats = await _graphql(`
               {
                 repository(owner: "${argv.organization}", name: "${repository.name}") {
                   object(expression: "${repoInfo.data.default_branch}") {
@@ -52,8 +52,8 @@ module.exports = {
 
             // if total commits is not null, add it to the total
             try {
-                totalCommits += enterpriseInfo.repository.object.history.totalCount;
-                console.log(`Total commits for ${repository.name} in last ${argv.history_in_days} days: ${enterpriseInfo.repository.object.history.totalCount}`);
+                totalCommits += commitStats.repository.object.history.totalCount;
+                console.log(`Total commits for ${repository.name} in last ${argv.history_in_days} days: ${commitStats.repository.object.history.totalCount}`);
             } catch {
                 console.log(`No commits for ${repository.name}`);
             }
